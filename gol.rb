@@ -1,3 +1,5 @@
+require 'curses'
+
 class Universe
   attr_reader :cells
 
@@ -67,7 +69,9 @@ class Universe
   end
 
   def draw
-    puts 0.upto(@rows - 1).map {|x| cells_on(x) }.join("\n")
+    Curses.setpos(0, 0)
+    Curses.addstr(0.upto(@rows - 1).map {|x| cells_on(x) }.join("\n"))
+    Curses.refresh
   end
 
   def cells_on(x)
