@@ -85,12 +85,20 @@ module Game
   BOUNDS = [24, 48]
 
   def run(seed)
-    universe = universe_from(seed)
-    universe.draw
-    run(universe.seed_generation)
+    while true
+      last_seed = seed
+      universe = universe_from(seed)
+      universe.draw
+      seed = universe.seed_generation
+      exit if should_break?(last_seed, seed)
+    end
   end
 
 private
+
+  def should_break?(last, this)
+    last == this || this.empty?
+  end
 
   def universe_from(seed)
     Universe.new(seed, BOUNDS)
@@ -102,7 +110,9 @@ INITIAL_SEED = [
   [1,7], [1,9], [1,2], [1,3], [1,6],
   [2,7], [2,9], [2,2], [2,3], [2,6],
   [3,7], [3,9], [3,2], [3,3], [3,6],
-  [4,7], [4,9], [4,2], [4,3], [4,6]
+  [4,7], [4,9], [4,2], [4,3], [4,6],
+  [5,7], [5,9], [5,2], [5,3], [5,6],
+  [6,7], [6,9], [6,2], [6,3], [6,6]
 ]
 
 Game.run(INITIAL_SEED)
