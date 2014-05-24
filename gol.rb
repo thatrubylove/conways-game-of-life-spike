@@ -1,5 +1,12 @@
 require 'curses'
 
+module Seeder
+  extend self
+  def generate_matrix
+    rand(40..200).times.map { [rand(24), rand(48)] }
+  end
+end
+
 class Universe
   attr_reader :cells
 
@@ -79,7 +86,7 @@ class Universe
   end
 
   def draw_cell(x, y)
-    living_cell?(x, y) ? "+" : "."
+    living_cell?(x, y) ? "∆" : " "
   end
 
 end
@@ -89,16 +96,23 @@ module Game
   BOUNDS = [24, 48]
 
   def run(seed)
+    iterations = 0
     while true
       last_seed = seed
       universe = universe_from(seed)
       universe.draw
       seed = universe.seed_generation
-      exit if should_break?(last_seed, seed)
+      iterations += 1
+      reseed if should_break?(last_seed, seed)
+      sleep 0.05
     end
   end
 
 private
+
+  def reseed
+    Game.run(Seeder.generate_matrix)
+  end
 
   def should_break?(last, this)
     last == this || this.empty?
@@ -109,15 +123,4 @@ private
   end
 end
 
-INITIAL_SEED = [
-  [5,7], [5,9], [5,2], [5,3], [5,6],
-  [1,7], [1,9], [1,2], [1,3], [1,6],
-  [2,7], [2,9], [2,2], [2,3], [2,6],
-  [3,7], [3,9], [3,2], [3,3], [3,6],
-  [4,7], [4,9], [4,2], [4,3], [4,6],
-  [5,7], [5,9], [5,2], [5,3], [5,6],
-  [6,7], [6,9], [6,2], [6,3], [6,6]
-]
-
-Game.run(INITIAL_SEED)
-puts "Simulation took #{iterations} generations to go stagnant"
+Game.run(Seeder.generate_matrix)
