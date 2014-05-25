@@ -1,5 +1,21 @@
 require 'curses'
 
+module LivingCell
+  extend self
+  def to_s
+    "∆"
+  end
+  alias_method :inspect, :to_s
+end
+
+module DeadCell
+  extend self
+  def to_s
+    " "
+  end
+  alias_method :inspect, :to_s
+end
+
 module Seeder
   extend self
   def generate_matrix
@@ -86,7 +102,7 @@ class Universe
   end
 
   def draw_cell(x, y)
-    living_cell?(x, y) ? "∆" : " "
+    living_cell?(x, y) ? LivingCell : DeadCell
   end
 
 end
